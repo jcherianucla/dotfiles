@@ -26,6 +26,9 @@ Plug 'tpope/vim-fugitive'
 " Airline for status bar
 Plug 'bling/vim-airline'
 
+" Vim-Go for Go linting
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
 call plug#end()
 
 " CSS and HTML specific autocomplete using omnifunc
@@ -43,6 +46,17 @@ execute pathogen#infect()
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+
+" Autocompletion settings
+set completeopt=menuone,noselect,noinsert
+" Popup OmniComplete function automatically
+function! OpenCompletion()
+    if !pumvisible() && ((v:char >= 'a' && v:char <= 'z') || (v:char >= 'A' && v:char <= 'Z'))
+        call feedkeys("\<C-x>\<C-o>", "n")
+    endif
+endfunction
+
+autocmd InsertCharPre * call OpenCompletion()
 
 " Auto start Nerdtree and move cursor to window
 autocmd vimenter * NERDTree | wincmd p
@@ -134,7 +148,7 @@ if has('gui running')
 else
 	set background=dark
 endif
-colorscheme solarized
+"colorscheme solarized
 
 " Key Bindings
 
@@ -157,7 +171,7 @@ map <leader><S-Tab> <C-w>W
 " 0 takes you back to beginning of line with code
 map 0 ^
 
-imap jk <Esc>
+imap ,. <Esc>
 " Turn off highlighting
 nnoremap <esc><esc> :silent! nohls<cr>
 
